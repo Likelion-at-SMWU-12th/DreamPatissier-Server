@@ -1,9 +1,9 @@
-# bakery/views.py
-
 from rest_framework import viewsets, generics
 from rest_framework.response import Response
 from .models import Bread
 from .serializers import BreadSerializer
+from rest_framework.exceptions import NotFound
+from rest_framework.decorators import api_view
 
 class BreadViewSet(viewsets.ModelViewSet):
     queryset = Bread.objects.all()
@@ -13,14 +13,16 @@ class BreadByCategoryView(generics.ListAPIView):
     serializer_class = BreadSerializer
 
     def get_queryset(self):
-        category_name = self.kwargs['category_name']
-        return Bread.objects.filter(category=category_name)
+        category_name = self.kwargs.get('category_name')
 
-from rest_framework.decorators import api_view
+        if category_name not in dict(Bread.CATEGORY_CHOICES).keys():
+            raise NotFound("Category not found.")
+        
+        return Bread.objects.filter(category=category_name)
 
 @api_view(['GET'])
 def search_bread(request, keywords):
-    breads = Bread.objects.filter(name__icontains=keywords)
+    breads = Bread.objects.filter(title__icontains=keywords)
     serializer = BreadSerializer(breads, many=True)
     return Response(serializer.data)
 
@@ -34,5 +36,5 @@ class AddToCartView(generics.UpdateAPIView):
 
     def update(self, request, *args, **kwargs):
         instance = self.get_object()
-        # 장바구니에 추가하는 로직 구현
+        # Implement logic to add to cart here
         return Response({'status': 'added to cart'})

@@ -11,12 +11,12 @@ class Bread(models.Model):
         ('root_vegetable', '구황작물빵'),
         ('special', '기획전'),
     ]
+    img_src = models.ImageField(max_length=255, null=True, blank=True)
+    tags = models.JSONField(null=True)
     name = models.CharField(max_length=255)
-    category = models.CharField(max_length=255)
     description = models.TextField()
     price = models.DecimalField(max_digits=10, decimal_places=2)
     category = models.CharField(max_length=20, choices=CATEGORY_CHOICES)
-    image_url = models.URLField()
 
     def __str__(self):
-        return self.name
+        return self.title
