@@ -8,8 +8,8 @@ class StepInline(admin.TabularInline):
 # admin.py
 @admin.register(Ingredient)
 class IngredientAdmin(admin.ModelAdmin):
-    list_display = ('name', 'quantity')
-    search_fields = ('name',)
+    list_display = ('item', 'quantity')
+    search_fields = ('item',)
 
 @admin.register(RecipeTag)
 class RecipeTagAdmin(admin.ModelAdmin):
@@ -18,13 +18,13 @@ class RecipeTagAdmin(admin.ModelAdmin):
 
 @admin.register(Recipe)
 class RecipeAdmin(admin.ModelAdmin):
-    list_display = ('title', 'author', 'cook_time', 'equipment')
+    list_display = ('title', 'author', 'cookingTime', 'equipment')
     inlines = [StepInline]
-    search_fields = ('title', 'author__username', 'ingredients__name', 'tag__name')
+    search_fields = ('title', 'author__username', 'ingredients__item', 'tag__name')
     filter_horizontal = ('tag', 'ingredients')
 
 @admin.register(Step)
 class StepAdmin(admin.ModelAdmin):
-    list_display = ('recipe', 'order', 'instruction')
-    search_fields = ('recipe__title', 'instruction')
+    list_display = ('recipe', 'order', 'description')
+    search_fields = ('recipe__title', 'description')
     list_filter = ('recipe',)
