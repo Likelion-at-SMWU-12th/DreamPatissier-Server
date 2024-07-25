@@ -4,11 +4,11 @@ from django.urls import path, include
 from django.conf import settings
 from .views import *
 
-router= routers.DefaultRouter()
-router.register(r'recipes',RecipeListCreateAPIView)
 
 urlpatterns = [
-    path('', include(router.urls)),
+    path('recipes/search/', search_recipe, name='recipe-search'),
+    path('recipes/', RecipeListCreateView.as_view()),
+    path('recipes/<int:pk>/',RecipeRetrieveUpdatelView.as_view()),
 ]
 
 urlpatterns += static(settings.MEDIA_URL, document_root = settings.MEDIA_ROOT)

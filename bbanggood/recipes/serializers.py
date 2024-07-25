@@ -22,7 +22,7 @@ class RecipeSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Recipe
-        fields = ['id','author', 'image', 'title', 'tags', 'cooking_time', 'equipment', 'ingredients', 'steps','is_owner']
+        fields = ['id','author', 'image', 'title', 'tags', 'cookingTime', 'equipment', 'ingredients', 'steps','is_owner']
 
     def get_is_owner(self, obj):
         request = self.context.get('request')
@@ -64,7 +64,7 @@ class RecipeSerializer(serializers.ModelSerializer):
         instance.image = validated_data.get('image', instance.image)
         instance.title = validated_data.get('title', instance.title)
         instance.tags = validated_data.get('tags', instance.tags)
-        instance.cooking_time = validated_data.get('cooking_time', instance.cooking_time)
+        instance.cookingTime = validated_data.get('cookingTime', instance.cookingTime)
         instance.equipment = validated_data.get('equipment', instance.equipment)
         instance.save()
 
@@ -90,7 +90,7 @@ class RecipeSerializer(serializers.ModelSerializer):
             description = step_data.get('description')
             image = step_data.get('image')
             if description:
-                # Try to find an existing step by description
+                #description을 기준으로 유일성 판단해서 수정
                 steps = Step.objects.filter(description=description)
                 if steps.exists():
                     step = steps.first()

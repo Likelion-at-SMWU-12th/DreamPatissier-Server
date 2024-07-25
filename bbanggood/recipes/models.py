@@ -22,10 +22,20 @@ class Recipe(models.Model):
     image = models.URLField(null=True, blank=True)
     title = models.CharField(max_length=255)
     tags = models.CharField(max_length=255)
-    cooking_time = models.CharField(max_length=50)
+    cookingTime = models.CharField(max_length=50)
     equipment = models.CharField(max_length=255)
     ingredients = models.ManyToManyField(Ingredient)
     steps = models.ManyToManyField(Step)
 
     def __str__(self):
         return self.title
+    
+class Bookmark(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name = 'bookmarks')
+    recipe = models.ForeignKey(Recipe, on_delete=models.CASCADE, related_name='bookmarks')
+
+    class Meta:
+        unique_together = ('user', 'recipe')
+
+    def __str__(self):
+        return f'{self.user.username} bookmarked {self.recipe.title}'
