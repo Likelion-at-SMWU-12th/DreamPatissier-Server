@@ -53,7 +53,7 @@ class RecipeRetrieveUpdatelView(generics.RetrieveAPIView,generics.UpdateAPIView,
     
 '''@api_view(['GET'])
 def search_recipe(request):
-    # 쿼리 매개변수에서 'keywords'를 가져옵니다.
+    # 쿼리 매개변수에서 'keywords'를 가져옴
     keywords = request.GET.get('keywords', '')
     
     if not keywords:
