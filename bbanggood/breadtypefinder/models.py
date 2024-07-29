@@ -23,3 +23,11 @@ class ResultType(models.Model):
 
     def __str__(self):
         return f"{self.title}"
+    
+#bakery앱에서의 빵모델과 연결
+class BreadRecommendation(models.Model):
+    result_type = models.ForeignKey(ResultType, related_name= 'bread_recommendations',on_delete=models.CASCADE)
+    bread = models.ForeignKey(Bread, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return f"{self.result_type.title} 추천빵:{self.bread.name}"
