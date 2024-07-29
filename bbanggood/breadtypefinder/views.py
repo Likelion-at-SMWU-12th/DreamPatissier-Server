@@ -30,6 +30,8 @@ class QuestionView(APIView):
         return Response(question_data, status = status.HTTP_200_OK)
     
 class SubmitView(APIView):
+    permission_classes = [IsAuthenticated]
+    
     def post(self, request):
         #요청을 보낸 사용자(로그인된 사용자) 정보 연결
         user = request.user
