@@ -2,8 +2,12 @@ from django.shortcuts import render
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
+from rest_framework.permissions import IsAuthenticated
 from django.contrib.auth import get_user_model
+from django.shortcuts import get_object_or_404
 from .models import *
+from.serializers import ResultTypeSerializer, RecommendBreadSerializer
+import random
 
 # Create your views here.
 
@@ -62,24 +66,29 @@ class SubmitView(APIView):
         result_url = f"/test/result/{result_id}"    
         
         return Response({"message": "답변이 저장되었습니다", "result_id": result_id,"result_type":result_type, "result_url":result_url}, status=status.HTTP_201_CREATED)
-    
 
-'''class ResultView(APIView):
+
+class ResultView(APIView):
+    permission_classes = [IsAuthenticated]
+
     def get(self, request, pk):
-        user = request.user
+        result_type = get_object_or_404(ResultType, pk=pk)
+        bread_recommendations = BreadRecommendation.objects.filter(result_type=result_type)
+        recommend = random.sample(list(bread_recommendations), 2)
 
-        try:
-            result = Result.objects.get(user=user, result_id=pk)
+        bread_serializer = RecommendBreadSerializer([recommendation.bread for recommendation in recommend], many=True)
+        breads = bread_serializer.data
 
-            if result.result_id == 1:
+        result_type_serializer = ResultTypeSerializer(result_type)
+        result_type_data = result_type_serializer.data
 
-                result_data = {
-                    "title" : "폭신한 인기쟁이 식빵",
-                    "image" : 
-                
-                }
-        
-        except:
-            return Response({"result": "결과를 찾을 수 없습니다."}, status = status.HTTP_404_NOT_FOUND)
-        
-        return Response({"result": result_data}, status = status.HTTP_200_OK)'''
+        response_data = {
+            "title": result_type_data['title'],
+            "image": result_type_data['image'],
+            "description1": result_type_data['description1'],
+            "description2": result_type_data['description2'],
+            "description3": result_type_data['description3'],
+            "breads": breads
+        }
+
+        return Response(response_data, status=status.HTTP_200_OK)
