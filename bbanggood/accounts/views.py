@@ -94,7 +94,7 @@ def login_api(request):
     
     if user:
         token, _ = Token.objects.get_or_create(user=user)
-        return Response({'token': token.key})    
+        return Response({'token': token.key, 'last_name': user.last_name})    
     
     else:
         errors['unauthorized']='아이디와 비밀번호를 정확히 입력해주세요.'

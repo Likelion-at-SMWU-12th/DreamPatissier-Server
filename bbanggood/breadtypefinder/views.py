@@ -55,3 +55,4 @@ class SubmitView(APIView):
             Result.objects.create(user=user, result_id=result_id)      
         
         return Response({"message": "답변이 저장되었습니다", "result_id": result_id}, status=status.HTTP_201_CREATED)
+    
