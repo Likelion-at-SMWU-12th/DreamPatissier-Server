@@ -35,12 +35,16 @@ class SubmitView(APIView):
         #유형 결과에 따른 id 설정
         if result == 'FP':
             result_id =  1
+            result_type = "폭신한 인기쟁이 식빵"
         elif result == 'FJ':
             result_id = 2
+            result_type = "겉바속촉 바게트"
         elif result == 'TP':
             result_id = 3
+            result_type = "달달한 해피바이러스 케이크"
         elif result == 'TJ':
             result_id = 4
+            result_type = "속 든든한 완벽주의 베이글"
         else:
             return Response({"알림: 존재하지 않는 유형결과입니다."}, status=status.HTTP_400_BAD_REQUEST)
         
@@ -49,10 +53,31 @@ class SubmitView(APIView):
         
         if existing_result:
             existing_result.result_id = result_id
+            existing_result.result_type=result_type
             existing_result.save()  
 
         else:
-            Result.objects.create(user=user, result_id=result_id)      
+            Result.objects.create(user=user, result_id=result_id,result_type=result_type)      
         
-        return Response({"message": "답변이 저장되었습니다", "result_id": result_id}, status=status.HTTP_201_CREATED)
+        return Response({"message": "답변이 저장되었습니다", "result_id": result_id,"result_type":result_type}, status=status.HTTP_201_CREATED)
     
+
+'''class ResultView(APIView):
+    def get(self, request, pk):
+        user = request.user
+
+        try:
+            result = Result.objects.get(user=user, result_id=pk)
+
+            if result.result_id == 1:
+
+                result_data = {
+                    "title" : "폭신한 인기쟁이 식빵",
+                    "image" : 
+                
+                }
+        
+        except:
+            return Response({"result": "결과를 찾을 수 없습니다."}, status = status.HTTP_404_NOT_FOUND)
+        
+        return Response({"result": result_data}, status = status.HTTP_200_OK)'''
