@@ -57,9 +57,11 @@ class SubmitView(APIView):
             existing_result.save()  
 
         else:
-            Result.objects.create(user=user, result_id=result_id,result_type=result_type)      
+            Result.objects.create(user=user, result_id=result_id,result_type=result_type) 
+
+        result_url = f"/test/result/{result_id}"    
         
-        return Response({"message": "답변이 저장되었습니다", "result_id": result_id,"result_type":result_type}, status=status.HTTP_201_CREATED)
+        return Response({"message": "답변이 저장되었습니다", "result_id": result_id,"result_type":result_type, "result_url":result_url}, status=status.HTTP_201_CREATED)
     
 
 '''class ResultView(APIView):
