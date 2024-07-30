@@ -11,7 +11,7 @@ class Ingredient(models.Model):
         return f"{self.item} - {self.quantity}"
 
 class Step(models.Model):
-    image = models.URLField(null=True, blank=True)
+    image = models.ImageField(null=True, blank=True) #URLField에서 ImageField로 수정
     description = models.TextField()
 
     def __str__(self):
@@ -19,7 +19,7 @@ class Step(models.Model):
 
 class Recipe(models.Model):
     author = models.ForeignKey(User, on_delete=models.CASCADE)
-    image = models.URLField(null=True, blank=True)
+    image = models.ImageField(null=True, blank=True) #URLField에서 ImageField로 수정
     title = models.CharField(max_length=255)
     tags = models.CharField(max_length=255)
     cookingTime = models.CharField(max_length=50)
