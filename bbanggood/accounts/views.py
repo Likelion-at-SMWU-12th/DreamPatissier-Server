@@ -21,8 +21,7 @@ def signup_api(request):
     password = request.data.get('password')
     password2 = request.data.get('password2')
     last_name = request.data.get('last_name')
-    
-    #phone = request.data.get('phone', default = None)
+    phone = request.data.get('phone', None)
 
     errors={}
 
@@ -57,7 +56,7 @@ def signup_api(request):
         username=username,
         password = password,
         last_name = last_name,
-        #phone = phone  //user 모델 커스텀 후 추가예정
+        phone = phone  #user 모델 커스텀 후 추가예정-> 추가
     )
 
     #리디렉션 url
