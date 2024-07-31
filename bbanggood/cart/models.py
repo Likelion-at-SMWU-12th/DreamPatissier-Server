@@ -1,9 +1,10 @@
 from django.db import models
 from django.contrib.auth.models import User
+from django.contrib.auth import get_user_model
 from bakery.models import Bread  # 'bakery' 앱에서 Bread 모델을 가져옴
 
 class Cart(models.Model): #장바구니 정보(장바구니 자체)
-    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    user = get_user_model()
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
