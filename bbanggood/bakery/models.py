@@ -14,7 +14,9 @@ class Bread(models.Model):
     img_src = models.ImageField(max_length=255, null=True, blank=True)
     tags = models.JSONField(null=True)
     name = models.CharField(max_length=255)
-    description = models.TextField()
+    description1 = models.TextField(null=True, blank=True)
+    description2 = models.TextField(null=True, blank=True)
+    description3 = models.TextField(null=True, blank=True)
     price = models.DecimalField(max_digits=10, decimal_places=2)
     category = models.CharField(max_length=20, choices=CATEGORY_CHOICES)
 
