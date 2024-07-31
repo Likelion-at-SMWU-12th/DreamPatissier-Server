@@ -1,28 +1,25 @@
 from rest_framework import serializers
-from .models import Recipe, Ingredient, Step
+from .models import Recipe
 from django.contrib.auth import get_user_model
 
-User=get_user_model()
-
-class IngredientSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Ingredient
-        fields = ['item', 'quantity']
-
-class StepSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Step
-        fields = ['image', 'description']
+User = get_user_model()
 
 class RecipeSerializer(serializers.ModelSerializer):
+    # 새로운 필드 추가
     is_owner = serializers.SerializerMethodField()
-    ingredients = IngredientSerializer(many=True)
-    steps = StepSerializer(many=True)
-    author = serializers.CharField()  # User 모델의 username을 직렬화
+    author = serializers.CharField()  # 사용자 이름을 문자열로 입력받기
 
     class Meta:
         model = Recipe
-        fields = ['id','author', 'image', 'title', 'tags', 'cookingTime', 'equipment', 'ingredients', 'steps','is_owner']
+        fields = [
+            'id', 'title', 'image', 'author', 'tags', 'cookingTime', 'equipment',
+            'ingredients', 'step1_image', 'step1_description', 'step2_image', 'step2_description',
+            'step3_image', 'step3_description', 'step4_image', 'step4_description',
+            'step5_image', 'step5_description', 'step6_image', 'step6_description',
+            'step7_image', 'step7_description', 'step8_image', 'step8_description',
+            'step9_image', 'step9_description', 'step10_image', 'step10_description',
+            'is_owner'
+        ]
 
     def get_is_owner(self, obj):
         request = self.context.get('request')
@@ -31,78 +28,31 @@ class RecipeSerializer(serializers.ModelSerializer):
         return False
 
     def create(self, validated_data):
-        ingredients_data = validated_data.pop('ingredients')
-        steps_data = validated_data.pop('steps')
-        author_username = validated_data.pop('author')
-        
-        # username으로 User 객체 가져오기
+        # username으로 author를 찾는 과정
+        author_username = self.context['request'].data.get('author')
         try:
-            user = User.objects.get(username=author_username)
+            author = User.objects.get(username=author_username)
         except User.DoesNotExist:
-            raise serializers.ValidationError({"author": "User with this username does not exist."})
+            raise serializers.ValidationError({'author': 'Invalid username'})
+        
+        # author를 validated_data에 추가하고 Recipe 인스턴스 생성
+        validated_data['author'] = author
+        return super().create(validated_data)
 
-        # Recipe 객체 생성
-        recipe = Recipe.objects.create(author=user, **validated_data)
-
-        
-        for ingredient_data in ingredients_data:
-            ingredient, created = Ingredient.objects.get_or_create(**ingredient_data)
-            recipe.ingredients.add(ingredient)
-        
-        for step_data in steps_data:
-            step, created = Step.objects.get_or_create(**step_data)
-            recipe.steps.add(step)
-        
-        return recipe
-    
     def update(self, instance, validated_data):
-        # 기존의 연관 데이터 삭제
-        instance.ingredients.clear()
-        instance.steps.clear()
-
-        # Recipe 데이터 업데이트
-        instance.image = validated_data.get('image', instance.image)
-        instance.title = validated_data.get('title', instance.title)
-        instance.tags = validated_data.get('tags', instance.tags)
-        instance.cookingTime = validated_data.get('cookingTime', instance.cookingTime)
-        instance.equipment = validated_data.get('equipment', instance.equipment)
-        instance.save()
-
-        # 새 연관 데이터 추가
-        ingredients_data = validated_data.pop('ingredients', [])
-        steps_data = validated_data.pop('steps', [])
-
-        for ingredient_data in ingredients_data:
-            item = ingredient_data.get('item')
-            quantity = ingredient_data.get('quantity')
-            if item and quantity is not None:
-                # item과 quantity 조합으로 유일성 판단
-                ingredients = Ingredient.objects.filter(item=item, quantity=quantity)
-                if ingredients.exists():
-                    ingredient = ingredients.first()
-                else:
-                    ingredient = Ingredient.objects.create(item=item, quantity=quantity)
-                instance.ingredients.add(ingredient)
-            else:
-                raise serializers.ValidationError({"ingredients": "재료이름 또는 수량이 생략되었습니다."})
-
-        for step_data in steps_data:
-            description = step_data.get('description')
-            image = step_data.get('image')
-            if description:
-                #description을 기준으로 유일성 판단해서 수정
-                steps = Step.objects.filter(description=description)
-                if steps.exists():
-                    step = steps.first()
-                    step.image = image
-                    step.save()
-                else:
-                    step = Step.objects.create(description=description, image=image)
-                instance.steps.add(step)
-            else:
-                raise serializers.ValidationError({"steps": "설명이 생략되었습니다."})
-
-        return instance
+        # username으로 author를 찾는 과정
+        author_username = self.context['request'].data.get('author')
+        if author_username:
+            try:
+                author = User.objects.get(username=author_username)
+                validated_data['author'] = author
+            except User.DoesNotExist:
+                raise serializers.ValidationError({'author': 'Invalid username'})
+        
+        return super().update(instance, validated_data)
+    
+from rest_framework import serializers
+from .models import Recipe
 
 class RecipeListSerializer(serializers.ModelSerializer):
     is_owner = serializers.SerializerMethodField()
@@ -110,9 +60,11 @@ class RecipeListSerializer(serializers.ModelSerializer):
     class Meta:
         model = Recipe
         fields = ['id', 'image', 'title', 'equipment', 'tags', 'is_owner']
-    
+
     def get_is_owner(self, obj):
         request = self.context.get('request')
         if request and request.user.is_authenticated:
             return obj.author == request.user
         return False
+    
+    
