@@ -10,6 +10,9 @@ from django.utils import timezone
 class BreadViewSet(viewsets.ModelViewSet):
     queryset = Bread.objects.all()
     serializer_class = BreadSerializer
+    
+    def get_serializer_context(self):
+        return {'request': self.request}
 
 class BreadByCategoryView(generics.ListAPIView):
     serializer_class = BreadSerializer
@@ -21,6 +24,10 @@ class BreadByCategoryView(generics.ListAPIView):
             raise NotFound("Category not found.")
         
         return Bread.objects.filter(category=category_name)
+    
+    def get_serializer_context(self):
+        return {'request': self.request}
+
 
 @api_view(['GET'])
 def search_bread(request, keywords):
@@ -31,6 +38,10 @@ def search_bread(request, keywords):
 class BreadDetailView(generics.RetrieveAPIView):
     queryset = Bread.objects.all()
     serializer_class = BreadSerializer
+    
+    def get_serializer_context(self):
+        return {'request': self.request}
+
 
 class AddToCartView(generics.GenericAPIView):
     queryset = Bread.objects.all()
