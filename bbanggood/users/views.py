@@ -9,8 +9,14 @@ from recipes.serializers import RecipeListSerializer, RecipeSerializer
 
 #내가 작성한 레시피
 
+class MyRecipeListView(generics.ListAPIView):
+    permission_classes=[IsAuthenticated]
+    serializer_class = RecipeListSerializer
 
-
+    def get_queryset(self):
+        user = self.request.user
+        return Recipe.objects.filter(author=user)
+    
 #저장한 레시피
 
 class SavedRecipeListView(generics.ListAPIView):
