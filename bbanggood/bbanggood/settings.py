@@ -44,7 +44,11 @@ INSTALLED_APPS = [
     'bakery',
     'diary',
     'cart',
+    'breadtypefinder',
+    'users',
 ]
+
+AUTH_USER_MODEL = 'users.User'
 
 
 MIDDLEWARE = [
