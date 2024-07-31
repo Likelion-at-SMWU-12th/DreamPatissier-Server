@@ -31,7 +31,7 @@ class BreadByCategoryView(generics.ListAPIView):
 
 @api_view(['GET'])
 def search_bread(request, keywords):
-    breads = Bread.objects.filter(title__icontains=keywords)
+    breads = Bread.objects.filter(name__icontains=keywords)
     serializer = BreadSerializer(breads, many=True)
     return Response(serializer.data)
 
