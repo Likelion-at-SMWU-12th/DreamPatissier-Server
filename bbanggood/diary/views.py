@@ -30,3 +30,6 @@ class BreadDiaryViewSet(viewsets.ModelViewSet):
         diary = self.get_object()
         serializer = self.get_serializer(diary)
         return Response(serializer.data)
+    
+    def get_serializer_context(self):
+        return {'request': self.request}
