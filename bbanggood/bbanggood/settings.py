@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'recipes',
     'bakery',
     'diary',
+    'cart',
     'breadtypefinder',
     'users',
 ]
