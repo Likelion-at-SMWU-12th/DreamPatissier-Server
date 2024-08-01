@@ -33,14 +33,16 @@ class BreadByCategoryView(generics.ListAPIView):
 
 @api_view(['GET'])
 def search_bread(request, keyword):
-    keyword = keyword.lstrip('#')
+    # 검색어에서 # 제거 및 포함 여부 확인
+    if keyword.startswith('#'):
+        search_term = keyword
+        plain_keyword = keyword.lstrip('#')
+    else:
+        search_term = f"#{keyword}"
+        plain_keyword = keyword
 
-    # name 필드 또는 tags 필드에 keyword가 정확히 일치하는 빵을 필터링
-    breads_by_name = Bread.objects.filter(name__exact=keyword)
-    breads_by_tags = Bread.objects.filter(tags__exact=keyword)
-
-    # 두 쿼리의 결과를 합치기
-    breads = (breads_by_name | breads_by_tags).distinct()
+    query = Q(name__icontains=plain_keyword) | Q(tags__icontains=search_term)
+    breads = Bread.objects.filter(query).distinct()
 
     serializer = BreadSerializer(breads, many=True, context={'request': request})
     return Response(serializer.data)
