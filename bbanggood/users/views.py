@@ -17,6 +17,16 @@ class MyRecipeListView(generics.ListAPIView):
         user = self.request.user
         return Recipe.objects.filter(author=user)
     
+class MyRecipeDetailView(generics.RetrieveUpdateDestroyAPIView):
+    permission_classes = [IsAuthenticated]
+    serializer_class = RecipeSerializer
+
+    def get_object(self):
+        user = self.request.user
+        recipe_id = self.kwargs.get('pk')
+        
+        return Recipe.objects.get(author=user, id=recipe_id)
+    
 #저장한 레시피
 
 class SavedRecipeListView(generics.ListAPIView):
