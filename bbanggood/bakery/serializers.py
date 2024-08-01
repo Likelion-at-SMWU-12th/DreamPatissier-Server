@@ -8,7 +8,7 @@ class BreadSerializer(serializers.ModelSerializer):
         model = Bread
         fields = '__all__'
         
-    def get_img_src(self, obj):
+    def img_src(self, obj):
         request = self.context.get('request')
         if obj.img_src and hasattr(obj.img_src, 'url'): #hasattr : 오브젝트의 속성확인
             return request.build_absolute_uri(obj.img_src.url)

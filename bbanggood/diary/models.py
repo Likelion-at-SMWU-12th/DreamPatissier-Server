@@ -1,7 +1,9 @@
 from django.db import models
 
 class BreadDiary(models.Model):
-    img_src = models.ImageField(max_length=255, null=True, blank=True)
+    img_src1 = models.ImageField(max_length=255, null=True, blank=True)
+    img_src2 = models.ImageField(max_length=255, null=True, blank=True)
+    img_src3 = models.ImageField(max_length=255, null=True, blank=True)
     date = models.DateField()
     bread_name = models.CharField(max_length=255)
     bakery_name = models.CharField(max_length=255)
