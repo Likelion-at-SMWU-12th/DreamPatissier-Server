@@ -1,7 +1,8 @@
 from rest_framework import viewsets, generics, status
 from rest_framework.response import Response
 from .models import Bread
-from .serializers import BreadSerializer
+from users.models import Review
+from .serializers import BreadSerializer, ReviewSerializer
 from rest_framework.exceptions import NotFound
 from rest_framework.decorators import api_view
 from cart.models import Cart, CartItem
@@ -31,18 +32,34 @@ class BreadByCategoryView(generics.ListAPIView):
 
 
 @api_view(['GET'])
-def search_bread(request, keywords):
-    # 빵 이름과 tags JSON 필드 검색
-    breads = Bread.objects.filter(
-        Q(name__icontains=keywords) | Q(tags__icontains=keywords)
-    )
-    serializer = BreadSerializer(breads, many=True)
+def search_bread(request, keyword):
+    keyword = keyword.lstrip('#')
+
+    # name 필드 또는 tags 필드에 keyword가 정확히 일치하는 빵을 필터링
+    breads_by_name = Bread.objects.filter(name__exact=keyword)
+    breads_by_tags = Bread.objects.filter(tags__exact=keyword)
+
+    # 두 쿼리의 결과를 합치기
+    breads = (breads_by_name | breads_by_tags).distinct()
+
+    serializer = BreadSerializer(breads, many=True, context={'request': request})
     return Response(serializer.data)
 
 class BreadDetailView(generics.RetrieveAPIView):
     queryset = Bread.objects.all()
     serializer_class = BreadSerializer
-    
+
+    def get(self, request, *args, **kwargs):
+        product = self.get_object()
+        product_data = BreadSerializer(product, context={'request': request}).data
+
+        # 리뷰 데이터를 가져와서 추가
+        reviews = Review.objects.filter(product=product)
+        reviews_data = ReviewSerializer(reviews, many=True, context={'request': request}).data
+        product_data['reviews'] = reviews_data
+
+        return Response(product_data)
+
     def get_serializer_context(self):
         return {'request': self.request}
 
