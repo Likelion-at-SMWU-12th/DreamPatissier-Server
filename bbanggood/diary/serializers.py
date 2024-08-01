@@ -8,7 +8,7 @@ class BreadDiarySerializer(serializers.ModelSerializer):
         model = BreadDiary
         fields = '__all__'
         
-    def get_img_src(self, obj):
+    def img_src(self, obj):
         request = self.context.get('request')
         if obj.img_src and hasattr(obj.img_src, 'url'):
             return request.build_absolute_uri(obj.img_src.url)
