@@ -10,6 +10,6 @@ class BreadSerializer(serializers.ModelSerializer):
         
     def get_img_src(self, obj):
         request = self.context.get('request')
-        if obj.img_src and hasattr(obj.img_src, 'url'):
+        if obj.img_src and hasattr(obj.img_src, 'url'): #hasattr : 오브젝트의 속성확인
             return request.build_absolute_uri(obj.img_src.url)
         return None
