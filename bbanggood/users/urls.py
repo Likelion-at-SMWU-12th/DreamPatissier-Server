@@ -6,12 +6,12 @@ from django.conf import settings
 from .views import *
 
 router = DefaultRouter()
-router.register(r'users', UserViewSet, basename='user')
+router.register(r'', UserViewSet, basename='user')
 router.register(r'orders', OrderViewSet, basename='order')
 router.register(r'reviews', ReviewViewSet, basename='review')
 
 urlpatterns = [
-    path('', include(router.urls))
+    path('', include(router.urls)),
     path('saved-recipes/', SavedRecipeListView.as_view(), name='saved-recipe'),
     path('saved-recipes/<int:pk>',SavedRecipeDetailView.as_view(),name='saved-recipe-detail'),
     path('my-recipes/',MyRecipeListView.as_view(), name='my-recipe'),
