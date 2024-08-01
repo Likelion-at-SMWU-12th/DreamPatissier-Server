@@ -6,6 +6,7 @@ from rest_framework.exceptions import NotFound
 from rest_framework.decorators import api_view
 from cart.models import Cart, CartItem
 from django.utils import timezone
+from django.db.models import Q
 
 class BreadViewSet(viewsets.ModelViewSet):
     queryset = Bread.objects.all()
@@ -31,7 +32,10 @@ class BreadByCategoryView(generics.ListAPIView):
 
 @api_view(['GET'])
 def search_bread(request, keywords):
-    breads = Bread.objects.filter(name__icontains=keywords)
+    # 빵 이름과 tags JSON 필드 검색
+    breads = Bread.objects.filter(
+        Q(name__icontains=keywords) | Q(tags__icontains=keywords)
+    )
     serializer = BreadSerializer(breads, many=True)
     return Response(serializer.data)
 
