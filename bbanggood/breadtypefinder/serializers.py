@@ -12,4 +12,4 @@ class ResultTypeSerializer(serializers.ModelSerializer):
 class RecommendBreadSerializer(serializers.ModelSerializer):
     class Meta:
         model = Bread
-        fields = ['name', 'img_src', 'tags']
+        fields = ['id','name', 'img_src', 'tags']
