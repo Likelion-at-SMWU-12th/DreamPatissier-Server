@@ -6,7 +6,7 @@ from django.conf import settings
 from .views import *
 
 router = DefaultRouter()
-router.register(r'users', UserViewSet, basename='user')
+router.register(r'', UserViewSet, basename='user')
 router.register(r'orders', OrderViewSet, basename='order')
 router.register(r'reviews', ReviewViewSet, basename='review')
 
