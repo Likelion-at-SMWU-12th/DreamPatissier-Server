@@ -18,52 +18,26 @@ class UserViewSet(viewsets.ReadOnlyModelViewSet):
 from rest_framework.response import Response
 from rest_framework import status
 
-class OrderViewSet(viewsets.ViewSet):
+class OrderViewSet(viewsets.ReadOnlyModelViewSet):
     serializer_class = OrderSerializer
     permission_classes = [permissions.IsAuthenticated]
 
     def get_queryset(self):
         user = self.request.user
         return Order.objects.filter(user=user)
-    
+
     def list(self, request):
         queryset = self.get_queryset()
         serializer = OrderSerializer(queryset, many=True)
         return Response(serializer.data)
 
-    @action(detail=False, methods=['post'])
-    def create_order(self, request):
-        cart = Cart.objects.filter(user=request.user).first()
-        if not cart:
-            return Response({'detail': 'No cart found.'}, status=status.HTTP_404_NOT_FOUND)
-        
-        cart_items = CartItem.objects.filter(cart=cart)
-        if not cart_items.exists():
-            return Response({'detail': 'Cart is empty.'}, status=status.HTTP_400_BAD_REQUEST)
-        
-        total_price = sum(item.product.price * item.quantity for item in cart_items)
-        
-        # 주문 생성
-        order = Order.objects.create(
-            user=request.user,
-            total_price=total_price
-        )
-        
-        # 주문 항목 생성
-        for item in cart_items:
-            OrderItem.objects.create(
-                order=order,
-                product=item.product,
-                quantity=item.quantity,
-                price=item.product.price
-            )
-        
-        # 장바구니 비우기
-        cart_items.delete()
-        
-        # 주문 생성 결과 반환
+    def retrieve(self, request, pk=None):
+        try:
+            order = self.get_queryset().get(pk=pk)
+        except Order.DoesNotExist:
+            return Response({'detail': 'Not found.'}, status=status.HTTP_404_NOT_FOUND)
         serializer = OrderSerializer(order)
-        return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.data)
 
 
 class ReviewViewSet(viewsets.ModelViewSet):
