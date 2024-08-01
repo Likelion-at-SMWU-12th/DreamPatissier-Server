@@ -11,7 +11,7 @@ router.register(r'bakery', BreadViewSet)
 urlpatterns = [
     path('', include(router.urls)),
     path('bakery/category/<str:category_name>/', BreadByCategoryView.as_view(), name='bread-by-category'),
-    path('bakery/search/<str:keywords>/', search_bread, name='bread-search'),
+    path('bakery/search/<str:keyword>/', search_bread, name='search_bread'),
     path('bakery/product/<int:pk>/', BreadDetailView.as_view(), name='bread-detail'),
     path('bakery/<int:pk>/add-to-cart/', AddToCartView.as_view(), name='add-to-cart'),
     
