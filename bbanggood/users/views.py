@@ -78,32 +78,31 @@ class SavedRecipeDetailView(generics.RetrieveUpdateDestroyAPIView):
 from rest_framework.response import Response
 from rest_framework import status
 
-class OrderViewSet(viewsets.ReadOnlyModelViewSet):
+# 주문 처리 뷰
+class OrderListView(generics.ListCreateAPIView):
     serializer_class = OrderSerializer
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
         user = self.request.user
         return Order.objects.filter(user=user)
 
-    def list(self, request):
-        queryset = self.get_queryset()
-        serializer = OrderSerializer(queryset, many=True)
-        return Response(serializer.data)
+    def perform_create(self, serializer):
+        serializer.save(user=self.request.user)
 
-    def retrieve(self, request, pk=None):
-        try:
-            order = self.get_queryset().get(pk=pk)
-        except Order.DoesNotExist:
-            return Response({'detail': 'Not found.'}, status=status.HTTP_404_NOT_FOUND)
-        serializer = OrderSerializer(order)
-        return Response(serializer.data)
+class OrderDetailView(generics.RetrieveUpdateDestroyAPIView):
+    serializer_class = OrderSerializer
+    permission_classes = [IsAuthenticated]
 
+    def get_queryset(self):
+        user = self.request.user
+        return Order.objects.filter(user=user)
 
-class ReviewViewSet(viewsets.ModelViewSet):
+# 리뷰 처리 뷰
+class ReviewListView(generics.ListCreateAPIView):
     serializer_class = ReviewSerializer
-    permission_classes = [permissions.IsAuthenticated]
-    
+    permission_classes = [IsAuthenticated]
+
     def get_queryset(self):
         user = self.request.user
         return Review.objects.filter(user=user)
@@ -111,4 +110,11 @@ class ReviewViewSet(viewsets.ModelViewSet):
     def perform_create(self, serializer):
         serializer.save(user=self.request.user)
 
+class ReviewDetailView(generics.RetrieveUpdateDestroyAPIView):
+    serializer_class = ReviewSerializer
+    permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        user = self.request.user
+        return Review.objects.filter(user=user)
 
