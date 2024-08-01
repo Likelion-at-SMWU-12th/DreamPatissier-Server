@@ -11,7 +11,7 @@ router.register(r'orders', OrderViewSet, basename='order')
 router.register(r'reviews', ReviewViewSet, basename='review')
 
 urlpatterns = [
-    path('', include(router.urls))
+    path('', include(router.urls)),
     path('saved-recipes/', SavedRecipeListView.as_view(), name='saved-recipe'),
     path('saved-recipes/<int:pk>',SavedRecipeDetailView.as_view(),name='saved-recipe-detail'),
     path('my-recipes/',MyRecipeListView.as_view(), name='my-recipe'),
