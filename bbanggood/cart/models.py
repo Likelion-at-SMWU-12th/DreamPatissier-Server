@@ -4,7 +4,7 @@ from django.contrib.auth import get_user_model
 from bakery.models import Bread  # 'bakery' 앱에서 Bread 모델을 가져옴
 
 class Cart(models.Model): #장바구니 정보(장바구니 자체)
-    user = get_user_model()
+    user = models.ForeignKey(get_user_model(), on_delete=models.CASCADE, null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
