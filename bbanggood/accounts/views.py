@@ -10,6 +10,7 @@ from rest_framework.response import Response
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from django.urls import reverse
+from breadtypefinder.models import Result
 # Create your views here.
 
 User = get_user_model()
@@ -93,7 +94,12 @@ def login_api(request):
     
     if user:
         token, _ = Token.objects.get_or_create(user=user)
-        return Response({'token': token.key, 'last_name': user.last_name})    
+
+        result = Result.objects.filter(user=user).first()
+        
+        result_id = result.result_id if result else None
+
+        return Response({'token': token.key, 'last_name': user.last_name, 'result_id':result_id})    
     
     else:
         errors['unauthorized']='아이디와 비밀번호를 정확히 입력해주세요.'
