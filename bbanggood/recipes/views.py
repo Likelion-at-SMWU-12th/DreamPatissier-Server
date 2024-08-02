@@ -27,8 +27,6 @@ class RecipeListCreateView(generics.ListCreateAPIView):
         request = self.request
         author_username = request.data.get('author')
         if author_username:
-            from django.contrib.auth import get_user_model
-            User = get_user_model()
             try:
                 author = User.objects.get(username=author_username)
             except User.DoesNotExist:
