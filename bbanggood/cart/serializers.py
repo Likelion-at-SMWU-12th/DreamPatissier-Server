@@ -8,7 +8,7 @@ class BreadSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 class CartItemSerializer(serializers.ModelSerializer):
-    bread = BreadSerializer()
+    bread = serializers.PrimaryKeyRelatedField(queryset=Bread.objects.all())
 
     class Meta:
         model = CartItem
