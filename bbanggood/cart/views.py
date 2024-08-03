@@ -25,7 +25,7 @@ class CartViewSet(viewsets.ModelViewSet):
         if not cart_items.exists():
             return Response({'detail': 'Cart is empty.'}, status=status.HTTP_400_BAD_REQUEST)
         
-        total_price = sum(item.product.price * item.quantity for item in cart_items)
+        total_price = sum(item.bread.price * item.quantity for item in cart_items)
         
         try:
             with transaction.atomic():
@@ -39,9 +39,9 @@ class CartViewSet(viewsets.ModelViewSet):
                 for item in cart_items:
                     OrderItem.objects.create(
                         order=order,
-                        product=item.product,
+                        product=item.bread,
                         quantity=item.quantity,
-                        price=item.product.price
+                        price=item.bread.price
                     )
                 
                 # 장바구니 비우기
@@ -59,3 +59,16 @@ class CartItemViewSet(viewsets.ModelViewSet):
 
     def get_queryset(self):
         return CartItem.objects.filter(cart__user=self.request.user)
+
+    def update(self, request, *args, **kwargs):
+        partial = True
+        instance = self.get_object()
+        serializer = self.get_serializer(instance, data=request.data, partial=partial)
+
+        # 수량 업데이트
+        if 'quantity' not in request.data:
+            return Response({'detail': 'Quantity field is required.'}, status=status.HTTP_400_BAD_REQUEST)
+
+        serializer.is_valid(raise_exception=True)
+        self.perform_update(serializer)
+        return Response(serializer.data)
