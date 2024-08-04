@@ -58,7 +58,7 @@ class RecipeListSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Recipe
-        fields = ['id', 'image', 'title', 'equipment', 'tags', 'is_owner']
+        fields = ['id', 'image', 'title', 'equipment', 'tags', 'cookingTime','is_owner']
 
     def get_is_owner(self, obj):
         request = self.context.get('request')
