@@ -102,7 +102,7 @@ def login_api(request):
         return Response({'token': token.key, 'last_name': user.last_name, 'result_id':result_id})    
     
     else:
-        errors['unauthorized']='아이디와 비밀번호를 정확히 입력해주세요.'
+        errors['unauthorized']='ⓘ 아이디와 비밀번호를 정확히 입력해주세요.'
         return Response({'errors':errors},status=401)
 
 @api_view(['POST'])
