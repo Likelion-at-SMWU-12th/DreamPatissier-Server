@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
@@ -74,7 +74,18 @@ class ResultView(APIView):
     permission_classes = [IsAuthenticated]
 
     def get(self, request, pk):
+        
+        if pk == 'null': #null일때 처리
+            return redirect('/test/questions/1')
+
+        try:
+            pk = int(pk)
+        except ValueError:
+            return redirect('/test/questions/1') 
+
+
         result_type = get_object_or_404(ResultType, pk=pk)
+
         bread_recommendations = BreadRecommendation.objects.filter(result_type=result_type)
         recommend = random.sample(list(bread_recommendations), 2)
 
