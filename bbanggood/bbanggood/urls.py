@@ -27,6 +27,6 @@ urlpatterns = [
     path('', include('bakery.urls')),
     path('', include('diary.urls')),
     path('', include('cart.urls')),
-    path('test/',include('breadtypefinder.urls')),
+    path('',include('breadtypefinder.urls')),
     path('users/',include('users.urls')),
 ]
