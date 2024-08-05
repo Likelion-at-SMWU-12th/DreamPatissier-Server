@@ -12,6 +12,7 @@ class Bread(models.Model):
         ('special', '기획전'),
     ]
     img_src = models.ImageField(max_length=255, null=True, blank=True)
+    img_dtl = models.ImageField(max_length=255, null=True, blank=True) 
     tags = models.TextField(null=True, blank=True)
     name = models.CharField(max_length=255)
     description1 = models.TextField(null=True, blank=True)
