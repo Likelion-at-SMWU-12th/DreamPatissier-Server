@@ -58,45 +58,6 @@ class RecipeRetrieveUpdateDestroyView(generics.RetrieveUpdateDestroyAPIView):
         else:
             bookmark.delete()
             return Response({'message': 'Recipe unbookmarked'}, status=status.HTTP_204_NO_CONTENT)
-         
-'''class RecipeDetailUpdateDestroyView(APIView):
-    permission_classes = [IsAuthenticatedOrReadOnly]
-
-    def get_object(self, pk):
-        return get_object_or_404(Recipe, pk=pk)
-    
-    def get_serializer_context(self):
-        return {'request': self.request}
-
-    def get(self, request, pk, format=None):
-        recipe = self.get_object(pk)
-        serializer = RecipeSerializer(recipe, context={'request': request})
-        return Response(serializer.data)
-
-    def put(self, request, pk, format=None):
-        recipe = self.get_object(pk)
-        serializer = RecipeSerializer(recipe, data=request.data, partial=True, context={'request': request})
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-    def delete(self, request, pk, format=None):
-        recipe = self.get_object(pk)
-        recipe.delete()
-        return Response(status=status.HTTP_204_NO_CONTENT)
-
-    def post(self, request, pk, format=None):
-        recipe = self.get_object(pk)
-        user = request.user
-
-        # 북마크 추가/제거 처리
-        bookmark, created = Bookmark.objects.get_or_create(user=user, recipe=recipe)
-        if created:
-            return Response({'message': 'Recipe bookmarked'}, status=status.HTTP_201_CREATED)
-        else:
-            bookmark.delete()
-            return Response({'message': 'Recipe unbookmarked'}, status=status.HTTP_204_NO_CONTENT)'''
 
 @api_view(['GET'])
 def search_recipe(request):
