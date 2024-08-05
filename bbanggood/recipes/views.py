@@ -38,7 +38,7 @@ class RecipeListCreateView(generics.ListCreateAPIView):
             # 기본적으로 현재 로그인한 사용자를 author로 설정
             serializer.save(author=request.user)
 
-'''class RecipeRetrieveUpdateDestroyView(generics.RetrieveUpdateDestroyAPIView):
+class RecipeRetrieveUpdateDestroyView(generics.RetrieveUpdateDestroyAPIView):
     queryset = Recipe.objects.all()
     serializer_class = RecipeSerializer
     permission_classes = [IsAuthenticatedOrReadOnly] 
@@ -57,9 +57,9 @@ class RecipeListCreateView(generics.ListCreateAPIView):
             return Response({'message': 'Recipe bookmarked'}, status=status.HTTP_201_CREATED)
         else:
             bookmark.delete()
-            return Response({'message': 'Recipe unbookmarked'}, status=status.HTTP_204_NO_CONTENT)'''
+            return Response({'message': 'Recipe unbookmarked'}, status=status.HTTP_204_NO_CONTENT)
         
-class RecipeDetailUpdateDestroyView(APIView):
+'''class RecipeDetailUpdateDestroyView(APIView):
     permission_classes = [IsAuthenticatedOrReadOnly]
 
     def get_object(self, pk):
@@ -96,7 +96,7 @@ class RecipeDetailUpdateDestroyView(APIView):
             return Response({'message': 'Recipe bookmarked'}, status=status.HTTP_201_CREATED)
         else:
             bookmark.delete()
-            return Response({'message': 'Recipe unbookmarked'}, status=status.HTTP_204_NO_CONTENT)
+            return Response({'message': 'Recipe unbookmarked'}, status=status.HTTP_204_NO_CONTENT)'''
 
 @api_view(['GET'])
 def search_recipe(request):
