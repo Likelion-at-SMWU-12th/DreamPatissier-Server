@@ -56,7 +56,7 @@ class BreadDetailView(generics.RetrieveAPIView):
         product_data = BreadSerializer(product, context={'request': request}).data
 
         # 리뷰 데이터를 가져와서 추가
-        reviews = Review.objects.filter(product=product)
+        reviews = Review.objects.filter(order_item__product=product)
         reviews_data = ReviewSerializer(reviews, many=True, context={'request': request}).data
         product_data['reviews'] = reviews_data
 

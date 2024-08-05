@@ -13,7 +13,7 @@ class BreadSerializer(serializers.ModelSerializer):
         fields = "__all__"
         
 class OrderItemSerializer(serializers.ModelSerializer):
-    product = BreadSerializer()
+    product = BreadSerializer(read_only=True)
 
     class Meta:
         model = OrderItem
@@ -28,10 +28,18 @@ class OrderSerializer(serializers.ModelSerializer):
 
 class ReviewSerializer(serializers.ModelSerializer):
     user = UserSerializer(read_only=True)
-    product = BreadSerializer(read_only=True)
+    order_item = OrderItemSerializer(read_only=True)
+    order_item_id = serializers.PrimaryKeyRelatedField(
+        queryset=OrderItem.objects.all(),
+        write_only=True,  # 쓰기 전용
+        source='order_item'  # 실제 필드명
+    )
     satisfaction = serializers.ChoiceField(choices=Review.SATISFACTION_CHOICES)
 
     class Meta:
         model = Review
-        fields = ['id', 'user', 'product', 'content', 'satisfaction', 'created_at']
+        fields = ['id', 'user', 'order_item', 'order_item_id', 'content', 'satisfaction', 'created_at']
         read_only_fields = ['user', 'created_at']
+
+    def create(self, validated_data):
+        return super().create(validated_data)

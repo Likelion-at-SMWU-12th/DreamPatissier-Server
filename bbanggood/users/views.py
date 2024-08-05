@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from rest_framework import generics, status
+from rest_framework import generics, status, serializers
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from recipes.models import Recipe, Bookmark
@@ -79,6 +79,7 @@ from rest_framework.response import Response
 from rest_framework import status
 
 # 주문 처리 뷰
+
 class OrderListView(generics.ListCreateAPIView):
     serializer_class = OrderSerializer
     permission_classes = [IsAuthenticated]
@@ -99,6 +100,7 @@ class OrderDetailView(generics.RetrieveUpdateDestroyAPIView):
         return Order.objects.filter(user=user)
 
 # 리뷰 처리 뷰
+
 class ReviewListView(generics.ListCreateAPIView):
     serializer_class = ReviewSerializer
     permission_classes = [IsAuthenticated]
@@ -108,7 +110,13 @@ class ReviewListView(generics.ListCreateAPIView):
         return Review.objects.filter(user=user)
 
     def perform_create(self, serializer):
-        serializer.save(user=self.request.user)
+        user = self.request.user
+        order_item_id = self.request.data.get('order_item_id')
+
+        if OrderItem.objects.filter(order__user=user, id=order_item_id).exists():
+            serializer.save(user=user)
+        else:
+            raise serializers.ValidationError({'detail': '주문한 제품에 대해서만 리뷰를 작성할 수 있습니다.'})
 
 class ReviewDetailView(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = ReviewSerializer
@@ -117,4 +125,3 @@ class ReviewDetailView(generics.RetrieveUpdateDestroyAPIView):
     def get_queryset(self):
         user = self.request.user
         return Review.objects.filter(user=user)
-
