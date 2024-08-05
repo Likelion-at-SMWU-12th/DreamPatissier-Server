@@ -16,13 +16,14 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
+from django.views.generic.base import RedirectView
 from accounts.views import login_api
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('accounts/',include('accounts.urls')),
     path('recipes/',include('recipes.urls')),
-    path('',login_api, name='login'),
+    path('',RedirectView.as_view(url='/accounts/login/',permanent=False), name='root_redirect'),
     path('', include('bakery.urls')),
     path('', include('diary.urls')),
     path('', include('cart.urls')),

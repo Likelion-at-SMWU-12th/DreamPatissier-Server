@@ -58,7 +58,7 @@ class RecipeRetrieveUpdateDestroyView(generics.RetrieveUpdateDestroyAPIView):
         else:
             bookmark.delete()
             return Response({'message': 'Recipe unbookmarked'}, status=status.HTTP_204_NO_CONTENT)
-        
+         
 '''class RecipeDetailUpdateDestroyView(APIView):
     permission_classes = [IsAuthenticatedOrReadOnly]
 
