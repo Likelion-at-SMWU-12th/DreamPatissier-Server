@@ -10,6 +10,10 @@ class Order(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     total_price = models.DecimalField(max_digits=10, decimal_places=2)
 
+    @property
+    def order_items(self):
+        return self.items.all()
+
     def __str__(self):
         return f'Order {self.id} by {self.user.username}'
     
@@ -25,10 +29,10 @@ class Review(models.Model):
         ('S', '만족해요'),
     ]
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='reviews')
-    product = models.ForeignKey(Bread, on_delete=models.CASCADE) 
+    order_item = models.ForeignKey(OrderItem, on_delete=models.CASCADE, related_name='reviews', default=1)  # OrderItem으로 변경
     content = models.TextField()
     satisfaction = models.CharField(max_length=1, choices=SATISFACTION_CHOICES)
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return f'Review by {self.user.username} on {self.product.name}'
+        return f'Review by {self.user.username} on {self.order_item.product.name}'
