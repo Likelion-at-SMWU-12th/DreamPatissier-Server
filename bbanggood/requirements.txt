@@ -1,6 +1,9 @@
 asgiref==3.8.1
 Django==5.0.7
+django-cors-headers==4.4.0
 djangorestframework==3.15.2
 pillow==10.4.0
+pip==24.1.2
+setuptools==65.5.0
 sqlparse==0.5.1
 tzdata==2024.1
