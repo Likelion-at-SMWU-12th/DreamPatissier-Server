@@ -95,6 +95,12 @@ class ResultView(APIView):
         result_type_serializer = ResultTypeSerializer(result_type)
         result_type_data = result_type_serializer.data
 
+       # Build absolute URIs for image fields
+        result_type_data['image'] = request.build_absolute_uri(result_type_data['image'])
+        for bread in breads:
+            bread['img_src'] = request.build_absolute_uri(bread['img_src'])
+
+
         response_data = {
             "title": result_type_data['title'],
             "image": result_type_data['image'],
