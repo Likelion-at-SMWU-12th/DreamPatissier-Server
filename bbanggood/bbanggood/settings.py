@@ -152,8 +152,8 @@ REST_FRAMEWORK = {
 
 
 CORS_ORIGIN_WHITELIST = (
-    "http://54.206.31.152:3000/",
-    "http://52.78.180.44:8080/")
+    'http://54.206.31.152:3000/',
+    'http://52.78.180.44:8080/')
 
 
 CORS_ALLOW_CREDENTIALS = True
