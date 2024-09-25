@@ -152,8 +152,8 @@ REST_FRAMEWORK = {
 
 
 CORS_ALLOWED_ORIGINS = [
-    'http://54.206.31.152:3000',
-    'http://52.78.180.44:8080']
+    'http://52.78.235.53:3000',
+    'http://54.180.143.179:8080']
 
 
 CORS_ALLOW_CREDENTIALS = True
